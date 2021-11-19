@@ -1,0 +1,16 @@
+$ec2List = Get-EC2Instance -Filter @{'name'='instance-state-name';'values'='running'} 
+
+
+$noAgentList = ($ec2List).Instances | Where-Object {($_ | Select-Object -ExpandProperty tags | Where-Object -Property Key -eq Name ).value}
+
+
+$ec2DetailsList = $noAgentList| ForEach-Object {
+    $properties = [ordered]@{
+    Name         = ($_ | Select-Object -ExpandProperty tags | Where-Object -Property Key -eq Name).value
+    InstanceID    = $_.InstanceId
+    PrivateIP    = $_.PrivateIpAddress
+    }
+    New-Object -TypeName PSObject -Property $properties
+}
+
+$ec2DetailsList | Sort-Object -Property Name | Export-Csv -Path C:\Users\mustafa\Desktop\devEc2DetailList.csv
