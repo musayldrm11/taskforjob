@@ -8,7 +8,7 @@ $ec2DetailsList = $noAgentList| ForEach-Object {
     $properties = [ordered]@{
     Name         = ($_ | Select-Object -ExpandProperty tags | Where-Object -Property Key -eq Name).value
     InstanceID    = $_.InstanceId
-    PrivateIP    = $_.PrivateIpAddress
+    PrivateIP    = $_.PublicIpAddress
     }
     New-Object -TypeName PSObject -Property $properties
 }
